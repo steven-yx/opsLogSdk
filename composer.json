@@ -1,0 +1,13 @@
+{
+    "name": "admin/ops-log-sdk",
+    "description": "opslog sdk",
+    "authors": [
+        {
+            "name": "peixiguang",
+            "email": "peixiguang@qutoutiao.net"
+        }
+    ],
+    "require": {
+        "ext-json": "^1.6"
+    }
+}
