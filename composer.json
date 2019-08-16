@@ -13,6 +13,7 @@
             "email": "peixiguang@qutoutiao.net"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "ext-json": "^1.6"
     }
