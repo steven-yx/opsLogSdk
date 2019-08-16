@@ -1,5 +1,5 @@
 <?php
-namespace App\Library;
+namespace OpsLog;
 
 class OpsLog
 {
