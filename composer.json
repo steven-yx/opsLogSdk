@@ -15,8 +15,5 @@
     ],
     "require": {
         "ext-json": "^1.6"
-    },
-   "autoload": {
-        "psr-4": {"OpsLog\\": "src"}
     }
 }
