@@ -1,6 +1,7 @@
 <?php
+namespace App\Library;
 
-class opsLog
+class OpsLog
 {
 
     /**
