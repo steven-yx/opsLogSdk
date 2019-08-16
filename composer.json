@@ -1,5 +1,5 @@
 {
-    "name": "admin/ops-log-sdk",
+    "name": "steven-yx/opslogsdk",
     "description": "opslog sdk",
     "homepage": "https://github.com/steven-ys/opsLogSdk",  
     "type": "yii2-extension",  
