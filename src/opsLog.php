@@ -1,7 +1,7 @@
 <?php
-namespace OpsLog;
+namespace opslog;
 
-class OpsLogClient
+class opslog
 {
 
     /**
