@@ -40,16 +40,15 @@ class OpsClient
     /**
      * @param $biz
      * @param $biz_id
-     * @param $action
      * @param $data
      * @return bool|mixed
      */
-    public function save($biz,$biz_id,$action,$data){
+    public function save($biz,$biz_id,$data){
 
         $request_data=[
             'biz'=>(string)$biz,
             'biz_id'=>int($biz_id),
-            'action'=>$action,
+            'action'=>$data['action']??'',
             'desc'=>(string)($data['desc']??''),
             'before'=>json_encode(($data['before']??[])),
             'after'=>json_encode($data['after']??[]),
