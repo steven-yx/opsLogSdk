@@ -100,7 +100,7 @@ class OpsClient
             $res=$this->httpPost($url,$request_data,100);
 
             if(!isset($res['code'])||$res['code']!=0){
-                $this->errMsg=$res['message']??"请求超时";
+                throw new \Exception($res['message']??"请求超时");
             }
             return true;
         }catch (\Exception $e){
