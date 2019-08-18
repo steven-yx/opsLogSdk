@@ -1,13 +1,15 @@
 <?php
 namespace OpsLog;
 
+use mysql_xdevapi\Exception;
+
 class OpsClient
 {
 
     /**
      * @var null
      */
-    private $url=null;
+    private $host=null;
 
     /**
      * @var null
@@ -24,49 +26,119 @@ class OpsClient
         "ip"=>""
     ];
 
-    const PATH="/save";
+    /**
+     * @var null
+     */
+    private $biz=null;
 
     /**
-     * opsLog constructor.
-     * @param $url
-     * @param $appId
+     * @var null
      */
-    public function __construct($url,$appId)
-    {
-        $this->url=$url;
+    private $biz_id=null;
+
+    /**
+     * @var null
+     */
+    private $action=null;
+
+    /**
+     * @var array|false|mixed|string|null
+     */
+    private $localIp=null;
+
+    /**
+     * @var null
+     */
+    private $errMsg=null;
+
+    /**
+     *
+     */
+    const PATH="/save";
+
+
+    /**
+     * OpsClient constructor.
+     * @param string $host
+     * @param int $appId
+     */
+    public function __construct(string $host,int $appId){
+
+        $this->host=$host;
         $this->appId=$appId;
+
+        $this->localIp=$this->get_server_ip();
     }
 
     /**
-     * @param $biz
-     * @param $biz_id
-     * @param $data
+     * @param string $desc
+     * @param array $before
+     * @param array $after
+     * @param array $extra
      * @return bool|mixed
      */
-    public function save($biz,$biz_id,$data){
+    public function save(string $desc,array $before=[],array $after=[],array $extra=[]){
 
-        $request_data=[
-            'biz'=>(string)$biz,
-            'biz_id'=>int($biz_id),
-            'action'=>$data['action']??'',
-            'desc'=>(string)($data['desc']??''),
-            'before'=>json_encode(($data['before']??[])),
-            'after'=>json_encode($data['after']??[]),
-            'extra'=>json_encode($data['extra']??[])
-        ];
-        return $this->httpPost($this->url,$request_data);
+        try{
+
+            if (!$this->biz) {
+                throw new Exception("log params biz is invalid");
+            }
+
+            $request_data=[
+                'app_id'=>$this->appId,
+                'biz'=>(string)$this->biz,
+                'biz_id'=>(int)$this->biz_id,
+                'action'=>$data['action']??'',
+                'desc'=>(string)$desc,
+                'operator'=>json_encode($this->operator),
+                'before'=>json_encode($before),
+                'after'=>json_encode($after),
+                'extra'=>json_encode($extra),
+            ];
+            $url=$this->host.self::PATH;
+            $res=$this->httpPost($url,$request_data,100);
+
+            if(!isset($res['code'])||$res['code']!=0){
+                $this->errMsg=$res['message']??"请求超时";
+            }
+            return true;
+        }catch (\Exception $e){
+            $this->errMsg=$e->getMessage();
+            return false;
+        }
     }
 
     /**
      * @param array $operator
      * @return $this
      */
-    public function setOperator($operator=[]){
-        $this->operator['uid']=$operator['uid']??'';
-        $this->operator['name']=$operator['name']??'';
-        $this->operator['mobile']=$operator['name']??'';
-        $this->operator['ip']=$operator['ip']??$this->get_server_ip();
+    public function initOperator(array $operator=[]){
+        $this->operator['uid']=(string)$operator['uid']??'';
+        $this->operator['name']=(string)$operator['name']??'';
+        $this->operator['mobile']=(string)$operator['name']??'';
+        $this->operator['ip']=(string)($operator['ip']??$this->localIp);
         return $this;
+    }
+
+    /**
+     * @param string $biz
+     * @param int $biz_id
+     * @param string $action
+     * @return $this
+     */
+    public function setBiz(string $biz,int $biz_id=0,string $action=''){
+        $this->biz_id=(int)$biz_id;
+        $this->biz=(string)$biz;
+        $this->action=(string)$action;
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getErrMsg(){
+        return $this->errMsg;
     }
 
     /**
