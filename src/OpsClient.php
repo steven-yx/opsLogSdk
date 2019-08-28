@@ -35,11 +35,6 @@ class OpsClient
     private $biz_id=null;
 
     /**
-     * @var null
-     */
-    private $action=null;
-
-    /**
      * @var array|false|mixed|string|null
      */
     private $localIp=null;
@@ -69,13 +64,13 @@ class OpsClient
     }
 
     /**
+     * @param string $biz
+     * @param int $biz_id
      * @param string $desc
-     * @param array $before
-     * @param array $after
-     * @param array $extra
-     * @return bool|mixed
+     * @param array $data
+     * @return bool
      */
-    public function save(string $desc,array $before=[],array $after=[],array $extra=[]){
+    public function save(string $biz='',int $biz_id=0,string $desc='',array $data=[]){
 
         try{
             if (!$this->biz) {
@@ -84,13 +79,11 @@ class OpsClient
 
             $request_data=[
                 'app_id'=>$this->appId,
-                'biz'=>(string)$this->biz,
-                'biz_id'=>(int)$this->biz_id,
+                'biz'=>(string)$biz,
+                'biz_id'=>(int)$biz_id,
                 'desc'=>(string)$desc,
                 'operator'=>$this->operator?json_encode($this->operator):'',
-                'before'=>$before?json_encode($before):'',
-                'after'=>$after?json_encode($after):'',
-                'extra'=>$extra?json_encode($extra):'',
+                'data'=>$data?json_encode($data):'',
             ];
             $url=$this->host.self::PATH;
             $res=$this->httpPost($url,$request_data,100);
@@ -114,17 +107,6 @@ class OpsClient
         $this->operator['name']=(string)($operator['name']??'');
         $this->operator['mobile']=(string)($operator['mobile']??'');
         $this->operator['ip']=(string)($operator['ip']??$this->localIp);
-        return $this;
-    }
-
-    /**
-     * @param string $biz
-     * @param int $biz_id
-     * @return $this
-     */
-    public function setBiz(string $biz,int $biz_id=0){
-        $this->biz_id=(int)$biz_id;
-        $this->biz=(string)$biz;
         return $this;
     }
 
