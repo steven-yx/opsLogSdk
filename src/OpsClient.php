@@ -86,8 +86,8 @@ class OpsClient
                 'biz'=>(string)$biz,
                 'biz_id'=>(int)$biz_id,
                 'desc'=>(string)$desc,
-                'operator'=>$this->operator?json_encode($this->operator):'',
-                'data'=>$data?json_encode($data):'',
+                'operator'=>$this->operator?json_encode($this->operator,JSON_UNESCAPED_UNICODE):'',
+                'data'=>$data?json_encode($data,JSON_UNESCAPED_UNICODE):'',
             ];
             $url=$this->host.self::PATH;
             $res=$this->httpPost($url,$request_data,$this->timeout);
