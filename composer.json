@@ -2,7 +2,7 @@
     "name": "steven-yx/opslogsdk",
     "description": "opslog sdk",
     "homepage": "https://github.com/steven-ys/opsLogSdk",  
-    "type": "yii2-extension",  
+    "type": "extension",
     "license": "MIT",  
     "support": {  
         "source": "https://github.com/steven-ys/opsLogSdk"  
@@ -13,9 +13,6 @@
             "email": "peixiguang@qutoutiao.net"
         }
     ],
-    "require": {
-        "ext-json": "^1.6"
-    },
     "autoload": {
         "psr-4": {
             "OpsLog\\": "src/"
