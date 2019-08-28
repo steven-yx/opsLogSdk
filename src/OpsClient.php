@@ -86,7 +86,6 @@ class OpsClient
                 'app_id'=>$this->appId,
                 'biz'=>(string)$this->biz,
                 'biz_id'=>(int)$this->biz_id,
-                'action'=>$data['action']??'',
                 'desc'=>(string)$desc,
                 'operator'=>$this->operator?json_encode($this->operator):'',
                 'before'=>$before?json_encode($before):'',
@@ -121,13 +120,11 @@ class OpsClient
     /**
      * @param string $biz
      * @param int $biz_id
-     * @param string $action
      * @return $this
      */
-    public function setBiz(string $biz,int $biz_id=0,string $action=''){
+    public function setBiz(string $biz,int $biz_id=0){
         $this->biz_id=(int)$biz_id;
         $this->biz=(string)$biz;
-        $this->action=(string)$action;
         return $this;
     }
 
