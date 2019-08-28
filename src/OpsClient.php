@@ -111,9 +111,9 @@ class OpsClient
      * @return $this
      */
     public function initOperator(array $operator=[]){
-        $this->operator['uid']=(string)$operator['uid']??'';
-        $this->operator['name']=(string)$operator['name']??'';
-        $this->operator['mobile']=(string)$operator['mobile']??'';
+        $this->operator['uid']=(string)($operator['uid']??'');
+        $this->operator['name']=(string)($operator['name']??'');
+        $this->operator['mobile']=(string)($operator['mobile']??'');
         $this->operator['ip']=(string)($operator['ip']??$this->localIp);
         return $this;
     }
