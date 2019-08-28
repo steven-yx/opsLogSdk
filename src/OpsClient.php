@@ -1,8 +1,6 @@
 <?php
 namespace OpsLog;
 
-use mysql_xdevapi\Exception;
-
 class OpsClient
 {
 
@@ -80,9 +78,8 @@ class OpsClient
     public function save(string $desc,array $before=[],array $after=[],array $extra=[]){
 
         try{
-
             if (!$this->biz) {
-                throw new Exception("log params biz is invalid");
+                throw new \Exception("log params biz is invalid");
             }
 
             $request_data=[
@@ -116,7 +113,7 @@ class OpsClient
     public function initOperator(array $operator=[]){
         $this->operator['uid']=(string)$operator['uid']??'';
         $this->operator['name']=(string)$operator['name']??'';
-        $this->operator['mobile']=(string)$operator['name']??'';
+        $this->operator['mobile']=(string)$operator['mobile']??'';
         $this->operator['ip']=(string)($operator['ip']??$this->localIp);
         return $this;
     }
