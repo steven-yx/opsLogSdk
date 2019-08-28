@@ -45,6 +45,11 @@ class OpsClient
     private $errMsg=null;
 
     /**
+     * @var null
+     */
+    private $timeout=null;
+
+    /**
      *
      */
     const PATH="/save";
@@ -54,11 +59,13 @@ class OpsClient
      * OpsClient constructor.
      * @param string $host
      * @param int $appId
+     * @param int $timeout
      */
-    public function __construct(string $host,int $appId){
+    public function __construct(string $host,int $appId,int $timeout=200){
 
         $this->host=$host;
         $this->appId=$appId;
+        $this->timeout=$timeout;
 
         $this->localIp=$this->get_server_ip();
     }
@@ -73,9 +80,6 @@ class OpsClient
     public function save(string $biz='',int $biz_id=0,string $desc='',array $data=[]){
 
         try{
-            if (!$this->biz) {
-                throw new \Exception("log params biz is invalid");
-            }
 
             $request_data=[
                 'app_id'=>$this->appId,
@@ -86,7 +90,7 @@ class OpsClient
                 'data'=>$data?json_encode($data):'',
             ];
             $url=$this->host.self::PATH;
-            $res=$this->httpPost($url,$request_data,100);
+            $res=$this->httpPost($url,$request_data,$this->timeout);
 
             if(!isset($res['code'])||$res['code']!=0){
                 throw new \Exception($res['message']??"请求超时");
