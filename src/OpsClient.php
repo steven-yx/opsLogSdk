@@ -122,6 +122,33 @@ class OpsClient
     }
 
     /**
+     * diff struct
+     * @param array $before
+     * @param array $after
+     * @return array
+     */
+    public function DiffStruct(array $before,array $after){
+
+        $diff=[];
+        if (empty($after)){
+            return $before;
+        }
+
+        foreach ($after as $k=>$v){
+            if (!isset($after[$k])){
+                $diff[$k]=$v;
+                continue;
+            }
+            if (isset($before[$k]) && $v!==$before[$k]){
+                $diff[$k]=$v;
+            }
+        }
+        return $diff;
+    }
+
+
+
+    /**
      * @return array|false|mixed|string
      */
     private function get_server_ip()
