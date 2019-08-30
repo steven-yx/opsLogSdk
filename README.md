@@ -5,7 +5,7 @@ composer require "steven-yx/opsLogSdk @dev"
 
 #使用方式
 
-$operator=[
+`$operator=[
     'id'=>'',
     'name'=>'',
     'mobile'=>'',
@@ -15,4 +15,4 @@ $operator=[
 $this->opslog=(new OpsLog\OpsClient($url,$appid)->initOperator($operator);
  
 #添加日志
-$this->opslog->save($biz,$biz_id,$desc,$param);
+$this->opslog->save($biz,$biz_id,$desc,$param);`
