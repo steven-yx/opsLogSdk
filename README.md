@@ -3,7 +3,7 @@
 ## 安装方式
 composer require "steven-yx/opsLogSdk @dev"
 
-## 使用方式
+## 操作人
 
 $operator=[
     'id'=>'',
