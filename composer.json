@@ -17,5 +17,8 @@
         "psr-4": {
             "OpsLog\\": "src/"
         }
+    },
+    "require": {
+        "ext-curl": "^7.2"
     }
 }

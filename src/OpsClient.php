@@ -86,10 +86,13 @@ class OpsClient
             'start_time'=>(string)($search_data['start_time']??''),
             'end_time'=>(string)($search_data['end_time']??'')
         ];
-        $url=$this->host+self::SearchPath;
         try{
+            if (!preg_match('/(http:\/\/)|(https:\/\/)/i', $this->host)){
+                $this->host="http://".$this->host;
+            }
+            $url=trim($this->host).self::SearchPath;
             $res=$this->httpGet($url,$search,$this->timeout);
-            if (!$res || empty($res['code'])){
+            if (!$res || !isset($res['code'])){
                 throw new \Exception("请求接口超时");
             }
             if ($res['code']!=0){
@@ -244,17 +247,26 @@ class OpsClient
     }
 
     /**
-     * get 请求
      * @param $url
+     * @param $params
      * @param int $timeout_ms
-     * @param array $header
-     * @return false|string
+     * @return mixed
      */
-    private function httpGet($url,$timeout_ms=1000,$header=[]) {
-        //状态码非200, 直接返回空, 超时时间500毫秒
-        if(!($ret=Http::get($url, ['timeout_ms' => intval($timeout_ms),'headers'=>$header]))) {
-            return json_encode([]);
-        }
-        return $ret['body'];
+    private function httpGet($url,$params,$timeout_ms=1000 {
+        $ch = curl_init();
+        $data_string=json_encode($params);
+        curl_setopt ( $ch, CURLOPT_URL, $url );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+        curl_setopt ( $ch, CURLOPT_TIMEOUT_MS, $timeout_ms);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string)
+        ));
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt ( $ch, CURLOPT_POSTFIELDS,$data_string);
+        $result = curl_exec ( $ch );
+        curl_close ( $ch );
+        return json_decode($result,true);
     }
 }
