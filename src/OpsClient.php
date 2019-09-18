@@ -252,7 +252,7 @@ class OpsClient
      * @param int $timeout_ms
      * @return mixed
      */
-    private function httpGet($url,$params,$timeout_ms=1000 {
+    private function httpGet($url,$params,$timeout_ms=1000){
         $ch = curl_init();
         $data_string=json_encode($params);
         curl_setopt ( $ch, CURLOPT_URL, $url );
