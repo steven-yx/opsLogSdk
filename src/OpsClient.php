@@ -49,11 +49,10 @@ class OpsClient
      */
     private $timeout=null;
 
-    /**
-     *
-     */
+    //保存
     const PATH="/save";
-
+    //搜索
+    const SearchPath="/search";
 
     /**
      * OpsClient constructor.
@@ -68,6 +67,41 @@ class OpsClient
         $this->timeout=$timeout;
 
         $this->localIp=$this->get_server_ip();
+    }
+
+    /**
+     * @param array $search_data
+     * @param $data
+     * @param $msg
+     * @return bool
+     */
+    public function search(array $search_data,&$data,&$msg){
+        $search=[
+            'app_id'=>(int)($search_data['app_id']??0),
+            'biz'=>(string)($search_data['biz']??''),
+            'biz_id'=>(int)($search_data['biz_id']??0),
+            'keywords'=>(string)($search_data['keywords']??''),
+            'page'=>(int)($search_data['page']??1),
+            'page_size'=>(int)($search_data['page_size']??20),
+            'start_time'=>(string)($search_data['start_time']??''),
+            'end_time'=>(string)($search_data['end_time']??'')
+        ];
+        $url=$this->host+self::SearchPath;
+        try{
+            $res=$this->httpGet($url,$search,$this->timeout);
+            if (!$res || empty($res['code'])){
+                throw new \Exception("请求接口超时");
+            }
+            if ($res['code']!=0){
+                $msg=$res['message']??'';
+                return false;
+            }
+            $data=$res['data']??[];
+            return true;
+        }catch (\Exception $e) {
+            $msg = $e->getMessage();
+            return false;
+        }
     }
 
     /**
@@ -209,4 +243,18 @@ class OpsClient
         }
     }
 
+    /**
+     * get 请求
+     * @param $url
+     * @param int $timeout_ms
+     * @param array $header
+     * @return false|string
+     */
+    private function httpGet($url,$timeout_ms=1000,$header=[]) {
+        //状态码非200, 直接返回空, 超时时间500毫秒
+        if(!($ret=Http::get($url, ['timeout_ms' => intval($timeout_ms),'headers'=>$header]))) {
+            return json_encode([]);
+        }
+        return $ret['body'];
+    }
 }
